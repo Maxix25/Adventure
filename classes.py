@@ -1,10 +1,11 @@
 import time
 import random
 from functions import *
+from getpass import getpass as press_enter
 turn = random.randrange(1,3)
+back = False
 player_wins = None
-items_list = ["Potion"]
-moves = ["Attack"]
+items_list = ["Potion", "Apple", "Potion"]
 class Character:
 	def __init__(self, damage:int, defense:int, hp:int):
 		self.damage = damage
@@ -16,10 +17,10 @@ class Character:
 		global turn
 		global player_wins
 		print("You enter into a fight!")
-		self.print_state()
+		self.player_state()
 		print("---------------------------------------")
-		enemy.enemy_state()	
-		input("Press ENTER to continue...")
+		enemy.enemy_state() 
+		press_enter("Press ENTER to continue...")
 
 		def player_turn():
 			global turn
@@ -31,19 +32,16 @@ class Character:
 				)
 			choice = option(2)
 			while True:
+				global back
 				if choice == 1:
-					global turn
-					global player_wins
 					self.damage_dealt = self.damage - enemy.defense
 					enemy.hp -= self.damage_dealt
 					printf(f"You dealt {self.damage_dealt} damage!")
 					if enemy.hp <= 0:
-						global player_wins
 						player_wins = True
 					else:
 						enemy.enemy_state()
 				else:
-					back = False
 					counter = 0
 					object = 1
 					for i in items_list:
@@ -57,7 +55,15 @@ class Character:
 						back = True
 						break
 					else:
-						items_list.pop(choice - 1)
+						printf(f"You use the item {items_list[choice - 1]}")
+						items_list.pop(choice - 1)  
+						printf(f"Items remaining:")
+						if items_list == []:
+							print("No items left")
+						else:
+							for i in items_list:
+								print(i)
+							time.sleep(1)
 				if back == True:
 					continue
 				turn = 2
@@ -67,7 +73,6 @@ class Character:
 			printf("It's the enemy's turn")
 			action = random.randrange(1,3)
 			if action == 1:
-				global turn
 				printf("The enemy attacks!")
 				enemy.damage_dealt = enemy.damage - self.defense
 				self.hp -= enemy.damage_dealt
@@ -76,8 +81,8 @@ class Character:
 				if self.hp <= 0:
 					global player_wins
 					player_wins = False
-				else:	
-					self.print_state()
+				else: 
+					self.player_state()
 			else:
 				printf("The enemy uses an item!")
 				time.sleep(1)
@@ -96,13 +101,19 @@ class Character:
 				else:
 					printf("You lost...")
 					break
-	def print_state(self):
+	def player_state(self):
 		print(
 			"You have", self.hp, "hp",
 			"\nYou have", self.defense, "defense"
 			"\nYou deal", self.damage, "damage"
 			"\nYou have", self.exp, "exp"
 		)
+
+	def gain_item(self):
+		self.object_gained = random.choice(possible_items)
+		printf(f"You gained a {self.object_gained}, remember to use it well...")
+		items_list.append(self.object_gained)
+
 	def enemy_state(enemy):
 		print(
 			"The enemy has", enemy.hp, "hp",
