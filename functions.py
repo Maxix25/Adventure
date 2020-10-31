@@ -1,5 +1,6 @@
 import sys
 import time
+from getpass import getpass as press_enter
 # Delay Print
 def printf(sentence: str):
     # Print one character at a time
@@ -8,6 +9,13 @@ def printf(sentence: str):
         sys.stdout.flush()
         time.sleep(0.07)
     print()
+def dialogue(sentence: str):
+    # Print one character at a time
+    for char in sentence:
+        sys.stdout.write(char)
+        sys.stdout.flush()
+        time.sleep(0.07)
+    press_enter("...v")
 def option(range2):
 	while True:
 		try:
@@ -20,4 +28,3 @@ def option(range2):
 			continue
 		break
 	return choice
-
